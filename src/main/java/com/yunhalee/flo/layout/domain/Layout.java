@@ -2,6 +2,7 @@ package com.yunhalee.flo.layout.domain;
 
 import com.yunhalee.flo.product.domain.Product;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ public class Layout {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Embedded

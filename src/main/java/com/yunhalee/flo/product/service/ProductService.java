@@ -5,7 +5,6 @@ import com.yunhalee.flo.product.domain.ProductRepository;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
-import com.yunhalee.flo.product.exception.ProductNameAlreadyExistsException;
 import com.yunhalee.flo.product.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;

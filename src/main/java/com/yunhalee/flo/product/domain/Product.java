@@ -1,5 +1,6 @@
 package com.yunhalee.flo.product.domain;
 
+import com.yunhalee.flo.product.dto.ProductRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +18,10 @@ public class Product {
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private int price;
 
     @Builder
@@ -27,6 +29,11 @@ public class Product {
         this.id = id;
         this.name = name;
         this.price = price;
+    }
+
+    public void update(ProductRequest request) {
+        this.name = request.getName();
+        this.price = request.getPrice();
     }
 
     public String getId() {

@@ -19,17 +19,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         check_product_created(createProductResponse);
     }
 
-    @Test
-    void create_product_with_already_existing_name_is_invalid() {
-        // given
-        ExtractableResponse<Response> createProductResponse = create_product_request();
-        check_product_created(createProductResponse);
-
-        // when
-        ExtractableResponse<Response> createDuplicatedProductResponse = create_product_request();
-        // then
-        check_product_not_created(createDuplicatedProductResponse);
-    }
 
     @Test
     void find_product() {
@@ -114,11 +103,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> update_product_request(String id, String name, int price) {
-        return update_request(new ProductRequest(name, price), "/products" + id);
+        return update_request(new ProductRequest(name, price), "/products/" + id);
     }
 
     public static ExtractableResponse<Response> delete_product_request(String id) {
-        return delete_request("/products" + id);
+        return delete_request("/products/" + id);
     }
 
     private String get_id_from_response(ExtractableResponse<Response> response) {
@@ -127,10 +116,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
     private void check_product_created(ExtractableResponse<Response> response) {
         check_create_response(response);
-    }
-
-    private void check_product_not_created(ExtractableResponse<Response> response) {
-        check_bad_request_response(response);
     }
 
     private void check_product_found(ExtractableResponse<Response> response) {

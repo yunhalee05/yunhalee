@@ -23,20 +23,12 @@ public class ProductService {
     }
 
     public ProductResponse createProduct(ProductRequest request) {
-        checkNameDuplicated(request.getName());
         Product product = productRepository.save(request.toProduct());
         return ProductResponse.of(product);
     }
 
-    private void checkNameDuplicated(String name) {
-        if (productRepository.existsByName(name)) {
-            throw new ProductNameAlreadyExistsException("Product already exists with name : " + name);
-        }
-    }
-
     public ProductResponse findProductById(String id) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new ProductNotFoundException("Cannot find product with id : " + id));
+        Product product = findById(id);
         return ProductResponse.of(product);
     }
 
@@ -46,4 +38,17 @@ public class ProductService {
             .map(product -> ProductResponse.of(product))
             .collect(Collectors.toList()));
     }
+
+    public ProductResponse updateProduct(String id, ProductRequest request) {
+        Product product = findById(id);
+        product.update(request);
+        return ProductResponse.of(product);
+    }
+
+    private Product findById(String id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ProductNotFoundException("Cannot find product with id : " + id));
+    }
+
+
 }

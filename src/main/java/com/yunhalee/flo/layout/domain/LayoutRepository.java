@@ -4,4 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LayoutRepository extends JpaRepository<Layout, String> {
 
+    boolean existsByName(String name);
 }

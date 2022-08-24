@@ -9,6 +9,7 @@ import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
+import com.yunhalee.flo.layout.exception.LayoutNameAlreadyExistsException;
 import com.yunhalee.flo.product.service.ProductService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class LayoutService {
 
     private static final String LAYOUT_NOT_FOUND_EXCEPTION = "Layout does not exist with id : ";
+    private static final String LAYOUT_NAME_DUPLICATED_EXCEPTION = "Layout already exists with name : ";
+
 
     private LayoutRepository layoutRepository;
     private ProductService productService;
@@ -30,10 +33,17 @@ public class LayoutService {
     }
 
     public LayoutResponse createLayout(LayoutRequest request) {
+        checkLayoutName(request.getName());
         List<Product> products = products(request.getProducts());
         Layout layout = layoutRepository.save(request.toLayout());
         layout.addProducts(products);
         return layoutResponse(layout);
+    }
+
+    private void checkLayoutName(String name) {
+        if (layoutRepository.existsByName(name)) {
+            throw new LayoutNameAlreadyExistsException(LAYOUT_NAME_DUPLICATED_EXCEPTION + name) ;
+        }
     }
 
     @Transactional(readOnly = true)
@@ -51,9 +61,21 @@ public class LayoutService {
 
     public LayoutResponse updateLayout(String id, LayoutRequest request) {
         Layout layout = findById(id);
+        checkLayoutName(layout.getName(), request.getName());
         layout.update(request.getName(), products(request.getProducts()));
         return layoutResponse(layout);
     }
+
+    private void checkLayoutName(String originalName, String updateName) {
+        if (isNameChanged(originalName, updateName) && layoutRepository.existsByName(updateName)) {
+            throw new LayoutNameAlreadyExistsException(LAYOUT_NAME_DUPLICATED_EXCEPTION + updateName) ;
+        }
+    }
+
+    private boolean isNameChanged(String originalName, String updateName) {
+        return !originalName.equals(updateName);
+    }
+
 
     public void deleteLayout(String id) {
         Layout layout = findById(id);

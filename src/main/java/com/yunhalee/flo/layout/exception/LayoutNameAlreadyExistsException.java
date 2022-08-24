@@ -1,10 +1,10 @@
-package com.yunhalee.flo.product.exception;
+package com.yunhalee.flo.layout.exception;
 
 import com.yunhalee.flo.common.exceptions.BadRequestException;
 
-public class ProductNameAlreadyExistsException extends BadRequestException {
+public class LayoutNameAlreadyExistsException extends BadRequestException {
 
-    public ProductNameAlreadyExistsException(String message) {
+    public LayoutNameAlreadyExistsException(String message) {
         super(message);
     }
 }

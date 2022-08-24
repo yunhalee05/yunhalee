@@ -55,7 +55,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
         ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createFirstLayoutResponse);
         String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
-        ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(NAME, Arrays.asList(secondProductId));
+        ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(UPDATE_NAME, Arrays.asList(secondProductId));
         check_layout_created(createSecondLayoutResponse);
 
         // when

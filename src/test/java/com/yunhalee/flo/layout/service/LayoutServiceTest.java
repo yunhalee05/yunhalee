@@ -4,6 +4,7 @@ import static com.yunhalee.flo.product.domain.ProductTest.FIRST_PRODUCT;
 import static com.yunhalee.flo.product.domain.ProductTest.SECOND_PRODUCT;
 
 import static com.yunhalee.flo.product.domain.ProductTest.THIRD_PRODUCT;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,8 @@ import com.yunhalee.flo.layout.domain.Layout;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
 import com.yunhalee.flo.layout.dto.LayoutResponses;
+import com.yunhalee.flo.layout.exception.LayoutNameAlreadyExistsException;
+import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
@@ -32,6 +35,9 @@ class LayoutServiceTest extends ServiceTest {
 
     private static final String ID = "1";
     private static final String NAME = "testLayout";
+    private static final String UPDATE_NAME = "updateTestLayout";
+    private static final String LAYOUT_NAME_DUPLICATED_EXCEPTION = "Layout already exists with name : ";
+    private static final String LAYOUT_NOT_FOUND_EXCEPTION = "Layout does not exist with id : ";
 
     private Layout layout;
 
@@ -63,6 +69,21 @@ class LayoutServiceTest extends ServiceTest {
     }
 
     @Test
+    public void create_layout_with_already_existing_name_is_invalid() {
+        // given
+        LayoutRequest request = new LayoutRequest(NAME, Arrays.asList(FIRST_PRODUCT.getId(), SECOND_PRODUCT.getId()));
+
+        // when
+        when(layoutRepository.existsByName(anyString())).thenReturn(true);
+
+        // then
+        assertThatThrownBy(() -> layoutService.createLayout(request))
+            .isInstanceOf(LayoutNameAlreadyExistsException.class)
+            .hasMessageContaining(LAYOUT_NAME_DUPLICATED_EXCEPTION);
+    }
+
+
+    @Test
     public void find_layout() {
         // given
         layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
@@ -73,6 +94,17 @@ class LayoutServiceTest extends ServiceTest {
 
         // then
         check_layout_equals(layout, response);
+    }
+
+    @Test
+    public void find_layout_with_not_existing_id_is_invalid() {
+        // when
+        when(layoutRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> layoutService.findLayout(ID))
+            .isInstanceOf(LayoutNotFoundException.class)
+            .hasMessageContaining(LAYOUT_NOT_FOUND_EXCEPTION);
     }
 
     @Test
@@ -110,6 +142,22 @@ class LayoutServiceTest extends ServiceTest {
         assertThat(layout.getId()).isEqualTo(response.getId());
         assertThat(layout.getName()).isEqualTo(response.getName());
         check_products_equals(Arrays.asList(SECOND_PRODUCT, THIRD_PRODUCT), response.getProducts());
+    }
+
+    @Test
+    public void update_layout_with_already_existing_name_is_invalid() {
+        // given
+        LayoutRequest request = new LayoutRequest(UPDATE_NAME, Arrays.asList(SECOND_PRODUCT.getId(), THIRD_PRODUCT.getId()));
+        layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
+
+        // when
+        when(layoutRepository.findById(anyString())).thenReturn(Optional.of(layout));
+        when(layoutRepository.existsByName(anyString())).thenReturn(true);
+
+        // then
+        assertThatThrownBy(() -> layoutService.updateLayout(ID, request))
+            .isInstanceOf(LayoutNameAlreadyExistsException.class)
+            .hasMessageContaining(LAYOUT_NAME_DUPLICATED_EXCEPTION);
     }
 
     @Test

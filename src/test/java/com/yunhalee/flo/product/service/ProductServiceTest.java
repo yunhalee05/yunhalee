@@ -21,7 +21,9 @@ class ProductServiceTest extends ServiceTest {
 
     private static final String ID = "testId";
     private static final String NAME = "testProduct";
+    private static final String UPDATE_NAME = "updateTestProduct";
     private static final int PRICE = 30;
+    private static final int UPDATE_PRICE = 20;
 
     @InjectMocks
     private ProductService productService = new ProductService(productRepository);
@@ -81,7 +83,7 @@ class ProductServiceTest extends ServiceTest {
     @Test
     public void update_product() {
         // given
-        ProductRequest request = new ProductRequest("updatedName", 10);
+        ProductRequest request = new ProductRequest(UPDATE_NAME, UPDATE_PRICE);
 
         // when
         when(productRepository.findById(anyString())).thenReturn(Optional.of(product));

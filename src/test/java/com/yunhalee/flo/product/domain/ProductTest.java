@@ -1,7 +1,5 @@
 package com.yunhalee.flo.product.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class ProductTest {
 
     public static final Product FIRST_PRODUCT = Product.builder()

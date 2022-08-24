@@ -3,6 +3,9 @@ package com.yunhalee.flo.layout;
 import static com.yunhalee.flo.product.ProductAcceptanceTest.check_product_created;
 import static com.yunhalee.flo.product.ProductAcceptanceTest.create_product_request;
 import static com.yunhalee.flo.product.ProductAcceptanceTest.get_id_from_response;
+import static com.yunhalee.flo.product.domain.ProductTest.FIRST_PRODUCT;
+import static com.yunhalee.flo.product.domain.ProductTest.SECOND_PRODUCT;
+import static com.yunhalee.flo.product.domain.ProductTest.THIRD_PRODUCT;
 
 import com.yunhalee.flo.AcceptanceTest;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
@@ -12,23 +15,17 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-public class LayoutAcceptanceTest extends AcceptanceTest {
+class LayoutAcceptanceTest extends AcceptanceTest {
 
     private static final String LAYOUT_API = "/layouts";
     private static final String NAME = "testLayout";
     private static final String UPDATE_NAME = "updatedTestLayout";
-    private static final String FIRST_PRODUCT_NAME = "firstProduct";
-    private static final int FIRST_PRODUCT_PRICE = 30;
-    private static final String SECOND_PRODUCT_NAME = "secondProduct";
-    private static final int SECOND_PRODUCT_PRICE = 20;
-    private static final String THIRD_PRODUCT_NAME = "thirdProduct";
-    private static final int THIRD_PRODUCT_PRICE = 10;
 
     @Test
     void create_layout() {
         // given
-        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        String firstProductId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
+        String secondProductId = create_product(SECOND_PRODUCT.getName(), SECOND_PRODUCT.getPrice());
 
         // when
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId, secondProductId));
@@ -39,10 +36,10 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void create_layout_with_already_existing_name_is_invalid() {
         // given
-        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String firstProductId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createFirstLayoutResponse);
-        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        String secondProductId = create_product(SECOND_PRODUCT.getName(), SECOND_PRODUCT.getPrice());
 
         // when
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId, secondProductId));
@@ -53,7 +50,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void find_layout() {
         // given
-        String productId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String productId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(productId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);
@@ -79,10 +76,10 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void find_layouts() {
         // given
-        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String firstProductId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createFirstLayoutResponse);
-        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        String secondProductId = create_product(SECOND_PRODUCT.getName(), SECOND_PRODUCT.getPrice());
         ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(UPDATE_NAME, Arrays.asList(secondProductId));
         check_layout_created(createSecondLayoutResponse);
 
@@ -95,11 +92,11 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void update_layout() {
         // given
-        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String firstProductId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);
-        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        String secondProductId = create_product(SECOND_PRODUCT.getName(), SECOND_PRODUCT.getPrice());
 
         // when
         ExtractableResponse<Response> updateLayoutResponse = update_layout_request(id, UPDATE_NAME, Arrays.asList(secondProductId));
@@ -110,13 +107,13 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void update_layout_with_already_existing_name_is_invalid() {
         // given
-        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String firstProductId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createFirstLayoutResponse);
-        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        String secondProductId = create_product(SECOND_PRODUCT.getName(), SECOND_PRODUCT.getPrice());
         ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(UPDATE_NAME, Arrays.asList(secondProductId));
         check_layout_created(createSecondLayoutResponse);
-        String thirdProductId = create_product(THIRD_PRODUCT_NAME, THIRD_PRODUCT_PRICE);
+        String thirdProductId = create_product(THIRD_PRODUCT.getName(), THIRD_PRODUCT.getPrice());
         String id = get_id_from_response(createFirstLayoutResponse);
 
         // when
@@ -129,7 +126,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void delete_layout() {
         // given
-        String productId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String productId = create_product(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(productId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);

@@ -1,6 +1,7 @@
 package com.yunhalee.flo.product.domain;
 
 import com.yunhalee.flo.layout.domain.Layout;
+import com.yunhalee.flo.layout.domain.Products;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,5 +55,9 @@ public class Product {
 
     public int getPrice() {
         return price;
+    }
+
+    public void toLayout(Layout layout) {
+        this.layout = layout;
     }
 }

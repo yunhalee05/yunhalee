@@ -51,7 +51,7 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    private Product findById(String id) {
+    public Product findById(String id) {
         return productRepository.findById(id)
             .orElseThrow(() -> new ProductNotFoundException("Cannot find product with id : " + id));
     }

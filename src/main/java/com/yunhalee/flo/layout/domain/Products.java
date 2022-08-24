@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import lombok.NoArgsConstructor;
@@ -15,14 +14,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Products {
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "layout")
     private List<Product> products = new ArrayList<>();
 
-    public Products(Product... products) {
-        this.products = new ArrayList<>(Arrays.asList(products));
+    public Products(List<Product> products) {
+        this.products = products;
     }
 
     public List<Product> getProducts() {
         return Collections.unmodifiableList(products);
     }
+
+    public void addProducts(List<Product> products) {
+        products.stream().forEach(this::addProduct);
+    }
+
+    private void addProduct(Product product) {
+        this.products.add(product);
+    }
+
 }

@@ -27,11 +27,17 @@ public class Layout {
     private Products products;
 
     @Builder
-    public Layout(String id, String name, Product... products) {
+    public Layout(String id, String name, List<Product> products) {
         this.id = id;
         this.name = name;
         this.products = new Products(products);
     }
+
+    public void addProducts(List<Product> products) {
+        this.products.addProducts(products);
+        products.stream().forEach(product -> product.toLayout(this));
+    }
+
 
     public String getId() {
         return id;

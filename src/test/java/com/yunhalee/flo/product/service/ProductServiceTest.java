@@ -30,7 +30,7 @@ class ProductServiceTest extends ServiceTest {
     private Product product;
 
     @BeforeEach
-    public void setUp() {
+    public void set_up() {
         product = Product.builder()
             .id(ID)
             .name(NAME)
@@ -77,6 +77,20 @@ class ProductServiceTest extends ServiceTest {
 
         // then
         assertThat(response.getProducts().size()).isEqualTo(2);
+    }
+
+    @Test
+    public void update_product() {
+        // given
+        ProductRequest request = new ProductRequest("updatedName", 10);
+
+        // when
+        when(productRepository.findById(anyString())).thenReturn(Optional.of(product));
+        ProductResponse response = productService.updateProduct(ID, request);
+
+        // then
+        assertThat(response.getName()).isEqualTo(request.getName());
+        assertThat(response.getPrice()).isEqualTo(request.getPrice());
     }
 
 

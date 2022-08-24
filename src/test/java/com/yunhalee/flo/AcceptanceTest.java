@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 
 @TestPropertySource(locations = "/application-test.properties")
@@ -34,6 +35,7 @@ public class AcceptanceTest {
     public static ExtractableResponse<Response> create_request(Object request, String uri) {
         return RestAssured
             .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
             .when().post(uri)
             .then().log().all()
@@ -43,6 +45,7 @@ public class AcceptanceTest {
     public static ExtractableResponse<Response> update_request(Object request, String uri) {
         return RestAssured
             .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
             .when().put(uri)
             .then().log().all()

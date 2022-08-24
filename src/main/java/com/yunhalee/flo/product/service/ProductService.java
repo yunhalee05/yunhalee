@@ -4,6 +4,7 @@ import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.domain.ProductRepository;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
+import com.yunhalee.flo.product.exception.ProductNameAlreadyExistsException;
 import com.yunhalee.flo.product.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,8 +22,15 @@ public class ProductService {
     }
 
     public ProductResponse createProduct(ProductRequest request) {
+        checkNameDuplicated(request.getName());
         Product product = productRepository.save(request.toProduct());
         return new ProductResponse(product);
+    }
+
+    private void checkNameDuplicated(String name) {
+        if (productRepository.existsByName(name)) {
+            throw new ProductNameAlreadyExistsException("Product already exists with name : " + name);
+        }
     }
 
     public ProductResponse findProductById(String id) {
@@ -30,7 +38,6 @@ public class ProductService {
             .orElseThrow(() -> new ProductNotFoundException("Cannot find product with id : " + id));
         return new ProductResponse(product);
     }
-
 
     public List<ProductResponse> findProducts() {
         List<Product> products = productRepository.findAll();

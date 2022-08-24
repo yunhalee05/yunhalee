@@ -12,38 +12,17 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     private static final int PRICE = 30;
 
     @Test
-    void manage_product() {
+    void create_product() {
         // when
         ExtractableResponse<Response> createProductResponse = create_product_request();
         // then
         check_product_created(createProductResponse);
-
-        // when
-        ExtractableResponse<Response> findProductResponse = find_product_request(createProductResponse);
-        // then
-        check_product_found(findProductResponse);
-
-        // when
-        ExtractableResponse<Response> findProductsResponse = find_products_request();
-        // then
-        check_products_found(findProductsResponse);
-
-        // when
-        ExtractableResponse<Response> updateProductResponse = update_product_request(createProductResponse, "updateTestProduct", 40);
-        // then
-        check_products_updated(updateProductResponse);
-
-        // when
-        ExtractableResponse<Response> deleteProductResponse = delete_product_request(createProductResponse);
-        // then
-        check_products_deleted(deleteProductResponse);
     }
 
     @Test
     void create_product_with_already_existing_name_is_invalid() {
-        // when
+        // given
         ExtractableResponse<Response> createProductResponse = create_product_request();
-        // then
         check_product_created(createProductResponse);
 
         // when
@@ -52,9 +31,63 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         check_product_not_created(createDuplicatedProductResponse);
     }
 
+    @Test
+    void find_product() {
+        // given
+        ExtractableResponse<Response> createProductResponse = create_product_request();
+        check_product_created(createProductResponse);
+
+        // when
+        ExtractableResponse<Response> findProductResponse = find_product_request(createProductResponse);
+        // then
+        check_product_found(findProductResponse);
+    }
+
+    @Test
+    void find_products() {
+        // given
+        ExtractableResponse<Response> createFirstProductResponse = create_product_request();
+        check_product_created(createFirstProductResponse);
+        ExtractableResponse<Response> createSecondProductResponse = create_product_request("secondTestProduct", 20);
+        check_product_created(createSecondProductResponse);
+
+        // when
+        ExtractableResponse<Response> findProductsResponse = find_products_request();
+        // then
+        check_products_found(findProductsResponse);
+    }
+
+    @Test
+    void update_product() {
+        // given
+        ExtractableResponse<Response> createProductResponse = create_product_request();
+        check_product_created(createProductResponse);
+
+        // when
+        ExtractableResponse<Response> updateProductResponse = update_product_request(createProductResponse, "updateTestProduct", 40);
+        // then
+        check_products_updated(updateProductResponse);
+    }
+
+    @Test
+    void delete_product() {
+        // given
+        ExtractableResponse<Response> createProductResponse = create_product_request();
+        check_product_created(createProductResponse);
+
+        // when
+        ExtractableResponse<Response> deleteProductResponse = delete_product_request(createProductResponse);
+        // then
+        check_products_deleted(deleteProductResponse);
+    }
+
 
     public static ExtractableResponse<Response> create_product_request() {
         return create_request(new ProductRequest(NAME, PRICE), "/products");
+    }
+
+    public static ExtractableResponse<Response> create_product_request(String name, int price) {
+        return create_request(new ProductRequest(name, price), "/products");
     }
 
     public static ExtractableResponse<Response> find_product_request(

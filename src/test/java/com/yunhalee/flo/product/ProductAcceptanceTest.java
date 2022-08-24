@@ -19,7 +19,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         check_product_created(createProductResponse);
     }
 
-
     @Test
     void find_product() {
         // given

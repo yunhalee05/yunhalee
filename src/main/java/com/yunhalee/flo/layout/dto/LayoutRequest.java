@@ -2,6 +2,7 @@ package com.yunhalee.flo.layout.dto;
 
 import com.yunhalee.flo.layout.domain.Layout;
 import com.yunhalee.flo.product.domain.Product;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class LayoutRequest {
     public Layout toLayout() {
         return Layout.builder()
             .name(name)
+            .products(new ArrayList<>())
             .build();
     }
 }

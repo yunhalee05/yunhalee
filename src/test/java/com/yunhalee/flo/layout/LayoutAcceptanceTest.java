@@ -30,8 +30,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
 
         // when
         ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME,
-            Arrays.asList(get_id_from_response(firstProductResponse),
-                get_id_from_response(secondProductResponse)));
+            Arrays.asList(get_id_from_response(firstProductResponse), get_id_from_response(secondProductResponse)));
         // then
         check_layout_created(createLayoutResponse);
     }

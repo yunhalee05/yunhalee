@@ -3,12 +3,13 @@ package com.yunhalee.flo.layout.service;
 import static com.yunhalee.flo.product.domain.ProductTest.FIRST_PRODUCT;
 import static com.yunhalee.flo.product.domain.ProductTest.SECOND_PRODUCT;
 
+import static com.yunhalee.flo.product.domain.ProductTest.THIRD_PRODUCT;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.yunhalee.flo.ServiceTest;
 import com.yunhalee.flo.layout.domain.Layout;
-import com.yunhalee.flo.layout.domain.Products;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
 import com.yunhalee.flo.product.domain.Product;
@@ -17,6 +18,7 @@ import com.yunhalee.flo.product.dto.ProductResponses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LayoutServiceTest extends ServiceTest {
 
+    private static final String ID = "1";
     private static final String NAME = "testLayout";
 
     private Layout layout;
@@ -36,16 +39,16 @@ class LayoutServiceTest extends ServiceTest {
     @BeforeEach
     public void set_up() {
         layout = Layout.builder()
+            .id(ID)
             .name(NAME)
             .products(new ArrayList<>())
             .build();
     }
 
     @Test
-    public void create_product() {
+    public void create_layout() {
         // given
-        LayoutRequest request = new LayoutRequest(NAME,
-            Arrays.asList(FIRST_PRODUCT.getId(), SECOND_PRODUCT.getId()));
+        LayoutRequest request = new LayoutRequest(NAME, Arrays.asList(FIRST_PRODUCT.getId(), SECOND_PRODUCT.getId()));
 
         // when
         when(productService.findById(FIRST_PRODUCT.getId())).thenReturn(FIRST_PRODUCT);
@@ -55,6 +58,24 @@ class LayoutServiceTest extends ServiceTest {
 
         // then
         check_layout_equals(layout, response);
+    }
+
+    @Test
+    public void update_layout() {
+        // given
+        LayoutRequest request = new LayoutRequest(NAME, Arrays.asList(SECOND_PRODUCT.getId(), THIRD_PRODUCT.getId()));
+        layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
+
+        // when
+        when(productService.findById(SECOND_PRODUCT.getId())).thenReturn(SECOND_PRODUCT);
+        when(productService.findById(THIRD_PRODUCT.getId())).thenReturn(THIRD_PRODUCT);
+        when(layoutRepository.findById(anyString())).thenReturn(Optional.of(layout));
+        LayoutResponse response = layoutService.updateLayout(ID, request);
+
+        // then
+        assertThat(layout.getId()).isEqualTo(response.getId());
+        assertThat(layout.getName()).isEqualTo(response.getName());
+        check_products_equals(Arrays.asList(SECOND_PRODUCT, THIRD_PRODUCT), response.getProducts());
     }
 
     private void check_layout_equals(Layout layout, LayoutResponse response) {

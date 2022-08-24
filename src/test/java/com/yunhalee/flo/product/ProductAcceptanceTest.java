@@ -36,11 +36,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> createProductResponse = create_product_request();
         check_product_created(createProductResponse);
+        String id = get_id_from_response(createProductResponse);
 
         // when
-        ExtractableResponse<Response> findProductResponse = find_product_request(createProductResponse);
+        ExtractableResponse<Response> findProductResponse = find_product_request(id);
         // then
         check_product_found(findProductResponse);
+    }
+
+    @Test
+    void find_product_with_not_existing_id_is_invalid() {
+        // given
+        String id = "invalidId";
+
+        // when
+        ExtractableResponse<Response> findProductResponse = find_product_request(id);
+        // then
+        check_product_not_found(findProductResponse);
     }
 
     @Test
@@ -62,9 +74,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> createProductResponse = create_product_request();
         check_product_created(createProductResponse);
+        String id = get_id_from_response(createProductResponse);
 
         // when
-        ExtractableResponse<Response> updateProductResponse = update_product_request(createProductResponse, "updateTestProduct", 40);
+        ExtractableResponse<Response> updateProductResponse = update_product_request(id, "updateTestProduct", 40);
         // then
         check_products_updated(updateProductResponse);
     }
@@ -74,9 +87,10 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> createProductResponse = create_product_request();
         check_product_created(createProductResponse);
+        String id = get_id_from_response(createProductResponse);
 
         // when
-        ExtractableResponse<Response> deleteProductResponse = delete_product_request(createProductResponse);
+        ExtractableResponse<Response> deleteProductResponse = delete_product_request(id);
         // then
         check_products_deleted(deleteProductResponse);
     }
@@ -90,10 +104,8 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return create_request(new ProductRequest(name, price), "/products");
     }
 
-    public static ExtractableResponse<Response> find_product_request(
-        ExtractableResponse<Response> response) {
-        String id = response.body().jsonPath().getString("id");
-        return find_request("/products" + id);
+    public static ExtractableResponse<Response> find_product_request(String id) {
+        return find_request("/products/" + id);
     }
 
 
@@ -101,24 +113,32 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return find_request("/products");
     }
 
-    public static ExtractableResponse<Response> update_product_request(
-        ExtractableResponse<Response> response, String name, int price) {
-        String id = response.body().jsonPath().getString("id");
+    public static ExtractableResponse<Response> update_product_request(String id, String name, int price) {
         return update_request(new ProductRequest(name, price), "/products" + id);
     }
 
-    public static ExtractableResponse<Response> delete_product_request(
-        ExtractableResponse<Response> response) {
-        String id = response.body().jsonPath().getString("id");
+    public static ExtractableResponse<Response> delete_product_request(String id) {
         return delete_request("/products" + id);
+    }
+
+    private String get_id_from_response(ExtractableResponse<Response> response) {
+        return response.body().jsonPath().getString("id");
     }
 
     private void check_product_created(ExtractableResponse<Response> response) {
         check_create_response(response);
     }
 
+    private void check_product_not_created(ExtractableResponse<Response> response) {
+        check_bad_request_response(response);
+    }
+
     private void check_product_found(ExtractableResponse<Response> response) {
         check_ok_response(response);
+    }
+
+    private void check_product_not_found(ExtractableResponse<Response> response) {
+        check_not_found_response(response);
     }
 
     private void check_products_found(ExtractableResponse<Response> response) {
@@ -133,8 +153,6 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         check_delete_response(response);
     }
 
-    private void check_product_not_created(ExtractableResponse<Response> response) {
-        check_bad_request_response(response);
-    }
+
 }
 

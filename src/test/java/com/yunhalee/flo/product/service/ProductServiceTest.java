@@ -1,6 +1,5 @@
 package com.yunhalee.flo.product.service;
 
-
 import com.yunhalee.flo.ServiceTest;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductRequest;
@@ -12,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ProductServiceTest extends ServiceTest {
@@ -91,6 +90,16 @@ class ProductServiceTest extends ServiceTest {
         // then
         assertThat(response.getName()).isEqualTo(request.getName());
         assertThat(response.getPrice()).isEqualTo(request.getPrice());
+    }
+
+    @Test
+    public void delete_product() {
+        // when
+        when(productRepository.findById(anyString())).thenReturn(Optional.of(product));
+        productService.deleteProduct(ID);
+
+        // then
+        verify(productRepository).delete(any());
     }
 
 

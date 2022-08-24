@@ -12,6 +12,7 @@ import com.yunhalee.flo.ServiceTest;
 import com.yunhalee.flo.layout.domain.Layout;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
+import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
@@ -58,6 +59,38 @@ class LayoutServiceTest extends ServiceTest {
 
         // then
         check_layout_equals(layout, response);
+    }
+
+    @Test
+    public void find_layout() {
+        // given
+        layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
+
+        // when
+        when(layoutRepository.findById(anyString())).thenReturn(Optional.of(layout));
+        LayoutResponse response = layoutService.findLayout(layout.getId());
+
+        // then
+        check_layout_equals(layout, response);
+    }
+
+    @Test
+    public void find_layouts() {
+        // given
+        Layout secondLayout = Layout.builder()
+            .id(ID)
+            .name(NAME)
+            .products(Arrays.asList(THIRD_PRODUCT))
+            .build();
+        layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
+
+        // when
+        when(layoutRepository.findAll()).thenReturn(Arrays.asList(layout, secondLayout));
+        LayoutResponses response = layoutService.findLayouts();
+
+        // then
+        check_layout_equals(layout, response.getLayouts().get(0));
+        check_layout_equals(secondLayout, response.getLayouts().get(1));
     }
 
     @Test

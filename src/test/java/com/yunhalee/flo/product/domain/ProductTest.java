@@ -9,7 +9,7 @@ public class ProductTest {
             .build();
 
     public static final Product SECOND_PRODUCT = Product.builder()
-        .id("1")
+        .id("2")
         .name("testSecondProduct")
         .price(20)
         .build();

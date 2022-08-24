@@ -26,11 +26,13 @@ public class ProductService {
         return ProductResponse.of(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse findProductById(String id) {
         Product product = findById(id);
         return ProductResponse.of(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponses findProducts() {
         List<Product> products = productRepository.findAll();
         return ProductResponses.of(products.stream()
@@ -42,6 +44,11 @@ public class ProductService {
         Product product = findById(id);
         product.update(request);
         return ProductResponse.of(product);
+    }
+
+    public void deleteProduct(String id) {
+        Product product = findById(id);
+        productRepository.delete(product);
     }
 
     private Product findById(String id) {

@@ -12,10 +12,14 @@ public class ProductResponse {
     private String name;
     private int price;
 
-    public ProductResponse(Product product) {
+    private ProductResponse(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();
+    }
+
+    public static ProductResponse of(Product product) {
+        return new ProductResponse(product);
     }
 
 }

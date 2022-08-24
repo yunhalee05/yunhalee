@@ -1,6 +1,8 @@
 package com.yunhalee.flo.layout.domain;
 
 import com.yunhalee.flo.product.domain.Product;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -25,11 +27,21 @@ public class Layout {
     private Products products;
 
     @Builder
-    public Layout(String id, String name, List<Product> products) {
+    public Layout(String id, String name, Product... products) {
         this.id = id;
         this.name = name;
         this.products = new Products(products);
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<Product> getProducts() {
+        return products.getProducts();
+    }
 }

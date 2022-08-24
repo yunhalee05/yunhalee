@@ -110,11 +110,11 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         return delete_request("/products/" + id);
     }
 
-    private String get_id_from_response(ExtractableResponse<Response> response) {
+    public static String get_id_from_response(ExtractableResponse<Response> response) {
         return response.body().jsonPath().getString("id");
     }
 
-    private void check_product_created(ExtractableResponse<Response> response) {
+    public static void check_product_created(ExtractableResponse<Response> response) {
         check_create_response(response);
     }
 

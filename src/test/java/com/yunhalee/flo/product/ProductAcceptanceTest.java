@@ -81,7 +81,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     private void check_product_created(ExtractableResponse<Response> response) {
-        check_ok_response(response);
+        check_create_response(response);
     }
 
     private void check_product_found(ExtractableResponse<Response> response) {

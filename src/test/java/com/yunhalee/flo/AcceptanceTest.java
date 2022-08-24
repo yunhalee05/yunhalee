@@ -65,6 +65,10 @@ public class AcceptanceTest {
             .extract();
     }
 
+    public static void check_create_response(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     public static void check_ok_response(ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }

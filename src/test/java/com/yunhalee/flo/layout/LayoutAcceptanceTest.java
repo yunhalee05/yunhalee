@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Test;
 
 public class LayoutAcceptanceTest extends AcceptanceTest {
 
+    private static final String LAYOUT_API = "/layouts";
     private static final String NAME = "testLayout";
+    private static final String UPDATE_NAME = "updatedTestLayout";
     private static final String FIRST_PRODUCT_NAME = "firstProduct";
     private static final int FIRST_PRODUCT_PRICE = 30;
     private static final String SECOND_PRODUCT_NAME = "secondProduct";
@@ -23,14 +25,11 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void create_layout() {
         // given
-        ExtractableResponse<Response> firstProductResponse = create_product_request(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        check_product_created(firstProductResponse);
-        ExtractableResponse<Response> secondProductResponse = create_product_request(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
-        check_product_created(secondProductResponse);
+        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
 
         // when
-        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME,
-            Arrays.asList(get_id_from_response(firstProductResponse), get_id_from_response(secondProductResponse)));
+        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId, secondProductId));
         // then
         check_layout_created(createLayoutResponse);
     }
@@ -38,9 +37,8 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void find_layout() {
         // given
-        ExtractableResponse<Response> productResponse = create_product_request(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        check_product_created(productResponse);
-        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(get_id_from_response(productResponse)));
+        String productId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(productId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);
 
@@ -53,13 +51,11 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void find_layouts() {
         // given
-        ExtractableResponse<Response> firstProductResponse = create_product_request(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        check_product_created(firstProductResponse);
-        ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(get_id_from_response(firstProductResponse)));
+        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        ExtractableResponse<Response> createFirstLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createFirstLayoutResponse);
-        ExtractableResponse<Response> secondProductResponse = create_product_request(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
-        check_product_created(secondProductResponse);
-        ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(NAME, Arrays.asList(get_id_from_response(secondProductResponse)));
+        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
+        ExtractableResponse<Response> createSecondLayoutResponse = create_layout_request(NAME, Arrays.asList(secondProductId));
         check_layout_created(createSecondLayoutResponse);
 
         // when
@@ -71,16 +67,14 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void update_layout() {
         // given
-        ExtractableResponse<Response> firstProductResponse = create_product_request(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        check_product_created(firstProductResponse);
-        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(get_id_from_response(firstProductResponse)));
+        String firstProductId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(firstProductId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);
-        ExtractableResponse<Response> secondProductResponse = create_product_request(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
-        check_product_created(secondProductResponse);
+        String secondProductId = create_product(SECOND_PRODUCT_NAME, SECOND_PRODUCT_PRICE);
 
         // when
-        ExtractableResponse<Response> updateLayoutResponse = update_layout_request(id, "updateTestLayout", Arrays.asList(get_id_from_response(secondProductResponse)));
+        ExtractableResponse<Response> updateLayoutResponse = update_layout_request(id, UPDATE_NAME, Arrays.asList(secondProductId));
         // then
         check_layout_updated(updateLayoutResponse);
     }
@@ -88,9 +82,8 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     @Test
     void delete_layout() {
         // given
-        ExtractableResponse<Response> firstProductResponse = create_product_request(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
-        check_product_created(firstProductResponse);
-        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(get_id_from_response(firstProductResponse)));
+        String productId = create_product(FIRST_PRODUCT_NAME, FIRST_PRODUCT_PRICE);
+        ExtractableResponse<Response> createLayoutResponse = create_layout_request(NAME, Arrays.asList(productId));
         check_layout_created(createLayoutResponse);
         String id = get_id_from_response(createLayoutResponse);
 
@@ -101,7 +94,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> create_layout_request(String name, List<String> productIds) {
-        return create_request(new LayoutRequest(name, productIds), "/layouts");
+        return create_request(new LayoutRequest(name, productIds), LAYOUT_API);
     }
 
     private void check_layout_created(ExtractableResponse<Response> response) {
@@ -109,7 +102,7 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> find_layout_request(String id) {
-        return find_request("/layouts/" + id);
+        return find_request(LAYOUT_API + SLASH + id);
     }
 
     private void check_layout_found(ExtractableResponse<Response> response) {
@@ -117,15 +110,16 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> find_layouts_request() {
-        return find_request("/layouts");
+        return find_request(LAYOUT_API);
     }
 
     private void check_layouts_found(ExtractableResponse<Response> response) {
         check_ok_response(response);
     }
 
-    private ExtractableResponse<Response> update_layout_request(String id, String name, List<String> productIds) {
-        return update_request(new LayoutRequest(name, productIds), "/layouts/" + id);
+    private ExtractableResponse<Response> update_layout_request(String id, String name,
+        List<String> productIds) {
+        return update_request(new LayoutRequest(name, productIds), LAYOUT_API + SLASH + id);
     }
 
     private void check_layout_updated(ExtractableResponse<Response> response) {
@@ -133,13 +127,18 @@ public class LayoutAcceptanceTest extends AcceptanceTest {
     }
 
     private ExtractableResponse<Response> delete_layout_request(String id) {
-        return delete_request("/layouts/" + id);
+        return delete_request(LAYOUT_API + SLASH + id);
     }
 
     private void check_layout_deleted(ExtractableResponse<Response> response) {
         check_delete_response(response);
     }
 
+    private String create_product(String name, int price) {
+        ExtractableResponse<Response> response = create_product_request(name, price);
+        check_product_created(response);
+        return get_id_from_response(response);
+    }
 
 
 }

@@ -17,6 +17,8 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
 
+    protected static final String SLASH = "/";
+
     @LocalServerPort
     int port;
 

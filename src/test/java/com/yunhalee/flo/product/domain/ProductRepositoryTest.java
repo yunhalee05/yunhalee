@@ -1,10 +1,7 @@
 package com.yunhalee.flo.product.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.yunhalee.flo.RepositoryTest;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
 
 class ProductRepositoryTest extends RepositoryTest {
 

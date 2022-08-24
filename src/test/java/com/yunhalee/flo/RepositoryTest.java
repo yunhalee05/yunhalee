@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(locations = "/application-test.properties")
-public class RepositoryTest {
+public abstract class RepositoryTest {
 
     @Autowired
     protected ProductRepository productRepository;

@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Test;
 
 public class ProductAcceptanceTest extends AcceptanceTest {
 
+    private static final String PRODUCT_API = "/products";
     private static final String NAME = "testProduct";
+    private static final String SECOND_NAME = "secondTestProduct";
     private static final int PRICE = 30;
+    private static final int SECOND_PRICE = 20;
 
     @Test
     void create_product() {
@@ -48,7 +51,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> createFirstProductResponse = create_product_request();
         check_product_created(createFirstProductResponse);
-        ExtractableResponse<Response> createSecondProductResponse = create_product_request("secondTestProduct", 20);
+        ExtractableResponse<Response> createSecondProductResponse = create_product_request(SECOND_NAME, SECOND_PRICE);
         check_product_created(createSecondProductResponse);
 
         // when
@@ -65,7 +68,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         String id = get_id_from_response(createProductResponse);
 
         // when
-        ExtractableResponse<Response> updateProductResponse = update_product_request(id, "updateTestProduct", 40);
+        ExtractableResponse<Response> updateProductResponse = update_product_request(id, SECOND_NAME, SECOND_PRICE);
         // then
         check_products_updated(updateProductResponse);
     }
@@ -85,28 +88,29 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
 
     public static ExtractableResponse<Response> create_product_request() {
-        return create_request(new ProductRequest(NAME, PRICE), "/products");
+        return create_request(new ProductRequest(NAME, PRICE), PRODUCT_API);
     }
 
     public static ExtractableResponse<Response> create_product_request(String name, int price) {
-        return create_request(new ProductRequest(name, price), "/products");
+        return create_request(new ProductRequest(name, price), PRODUCT_API);
     }
 
     public static ExtractableResponse<Response> find_product_request(String id) {
-        return find_request("/products/" + id);
+        return find_request(PRODUCT_API + SLASH + id);
     }
 
 
     public static ExtractableResponse<Response> find_products_request() {
-        return find_request("/products");
+        return find_request(PRODUCT_API);
     }
 
-    public static ExtractableResponse<Response> update_product_request(String id, String name, int price) {
-        return update_request(new ProductRequest(name, price), "/products/" + id);
+    public static ExtractableResponse<Response> update_product_request(String id, String name,
+        int price) {
+        return update_request(new ProductRequest(name, price), PRODUCT_API + SLASH + id);
     }
 
     public static ExtractableResponse<Response> delete_product_request(String id) {
-        return delete_request("/products/" + id);
+        return delete_request(PRODUCT_API + SLASH + id);
     }
 
     public static String get_id_from_response(ExtractableResponse<Response> response) {

@@ -4,6 +4,7 @@ import com.yunhalee.flo.layout.domain.Layout;
 import com.yunhalee.flo.layout.domain.LayoutRepository;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
+import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
@@ -34,8 +35,8 @@ public class LayoutService {
         layout.addProducts(products);
         return LayoutResponse.of(layout,
             ProductResponses.of(products.stream()
-                    .map(product -> ProductResponse.of(product))
-                    .collect(Collectors.toList())
+                .map(product -> ProductResponse.of(product))
+                .collect(Collectors.toList())
             ));
     }
 
@@ -52,8 +53,28 @@ public class LayoutService {
             ));
     }
 
+    public LayoutResponse findLayout(String id) {
+        Layout layout = findById(id);
+        return LayoutResponse.of(layout,
+            ProductResponses.of(layout.getProducts().stream()
+                .map(product -> ProductResponse.of(product))
+                .collect(Collectors.toList())
+            ));
+    }
+
+    public LayoutResponses findLayouts() {
+        return LayoutResponses.of(layoutRepository.findAll().stream()
+            .map(layout -> LayoutResponse.of(layout,
+                ProductResponses.of(layout.getProducts().stream()
+                    .map(product -> ProductResponse.of(product))
+                    .collect(Collectors.toList())
+                )))
+            .collect(Collectors.toList()));
+    }
+
     private Layout findById(String id) {
         return layoutRepository.findById(id)
-            .orElseThrow(() -> new LayoutNotFoundException("Layout does not exist with id : " + id));
+            .orElseThrow(
+                () -> new LayoutNotFoundException("Layout does not exist with id : " + id));
     }
 }

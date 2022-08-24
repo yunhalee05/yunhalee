@@ -2,12 +2,15 @@ package com.yunhalee.flo.layout.controller;
 
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
+import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.layout.service.LayoutService;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
+import com.yunhalee.flo.product.dto.ProductResponses;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +32,17 @@ public class LayoutController {
         LayoutResponse layout = layoutService.createLayout(request);
         return ResponseEntity.created(URI.create("/layouts/" + layout.getId())).body(layout);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<LayoutResponse> findLayout(@PathVariable("id") String id) {
+        return ResponseEntity.ok(layoutService.findLayout(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<LayoutResponses> findLayouts() {
+        return ResponseEntity.ok(layoutService.findLayouts());
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<LayoutResponse> updateLayout(@PathVariable("id") String id, @RequestBody LayoutRequest request) {

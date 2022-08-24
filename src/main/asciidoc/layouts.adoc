@@ -1,0 +1,54 @@
+ifndef::snippets[]
+:snippets: ../../../target/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+[[resources_layouts]]
+== Layout
+
+[[resources_layout_create]]
+=== 레이아웃 생성
+==== Request
+include::{snippets}/layout-create/http-request.adoc[]
+==== Response
+include::{snippets}/layout-create/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/layout-create/response-fields.adoc[]
+
+[[resources_layout_find_by_id]]
+=== 단일 레이아웃 조회
+==== Request
+include::{snippets}/layout-find-by-id/http-request.adoc[]
+==== Response
+include::{snippets}/layout-find-by-id/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/layout-find-by-id/response-fields.adoc[]
+
+[[resources_layouts_find_all]]
+=== 모든 레이아웃 조회
+==== Request
+include::{snippets}/layout-find-all/http-request.adoc[]
+==== Response
+include::{snippets}/layout-find-all/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/layout-find-all/response-fields.adoc[]
+
+[[resources_layout_update]]
+=== 레이아웃 수정
+==== Request
+include::{snippets}/layout-update/http-request.adoc[]
+==== Response
+include::{snippets}/layout-update/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/layout-update/response-fields.adoc[]
+
+[[resources_layout_delete]]
+=== 레이아웃 삭제
+==== Request
+include::{snippets}/layout-delete/http-request.adoc[]
+==== Response
+include::{snippets}/layout-delete/http-response.adoc[]

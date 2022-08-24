@@ -1,0 +1,54 @@
+ifndef::snippets[]
+:snippets: ../../../target/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+
+[[resources_products]]
+== Product
+
+[[resources_product_create]]
+=== 상품 생성
+==== Request
+include::{snippets}/product-create/http-request.adoc[]
+==== Response
+include::{snippets}/product-create/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/product-create/response-fields.adoc[]
+
+[[resources_product_find_by_id]]
+=== 단일 상품 조회
+==== Request
+include::{snippets}/product-find-by-id/http-request.adoc[]
+==== Response
+include::{snippets}/product-find-by-id/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/product-find-by-id/response-fields.adoc[]
+
+[[resources_products_find_all]]
+=== 모든 상품 조회
+==== Request
+include::{snippets}/product-find-all/http-request.adoc[]
+==== Response
+include::{snippets}/product-find-all/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/product-find-all/response-fields.adoc[]
+
+[[resources_product_update]]
+=== 상품 수정
+==== Request
+include::{snippets}/product-update/http-request.adoc[]
+==== Response
+include::{snippets}/product-update/http-response.adoc[]
+==== Response Field Description
+include::{snippets}/product-update/response-fields.adoc[]
+
+[[resources_product_delete]]
+=== 상품 삭제
+==== Request
+include::{snippets}/product-delete/http-request.adoc[]
+==== Response
+include::{snippets}/product-delete/http-response.adoc[]

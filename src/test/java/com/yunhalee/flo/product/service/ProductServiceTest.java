@@ -5,6 +5,9 @@ import com.yunhalee.flo.ServiceTest;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
+import com.yunhalee.flo.product.dto.ProductResponses;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +15,7 @@ import org.mockito.InjectMocks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class ProductServiceTest extends ServiceTest {
@@ -35,7 +39,7 @@ class ProductServiceTest extends ServiceTest {
     }
 
     @Test
-    public void createProduct() {
+    public void create_product() {
         // given
         ProductRequest request = new ProductRequest(NAME, PRICE);
 
@@ -45,6 +49,34 @@ class ProductServiceTest extends ServiceTest {
 
         // then
         check_equals(product, response);
+    }
+
+    @Test
+    public void find_product() {
+
+        // when
+        when(productRepository.findById(anyString())).thenReturn(Optional.of(product));
+        ProductResponse response = productService.findProductById(ID);
+
+        // then
+        check_equals(product, response);
+    }
+
+    @Test
+    public void find_products() {
+        // given
+        Product secondProduct = Product.builder()
+            .id(ID)
+            .name(NAME)
+            .price(PRICE)
+            .build();
+
+        // when
+        when(productRepository.findAll()).thenReturn(List.of(product, secondProduct));
+        ProductResponses response = productService.findProducts();
+
+        // then
+        assertThat(response.getProducts().size()).isEqualTo(2);
     }
 
 

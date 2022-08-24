@@ -4,6 +4,7 @@ import com.yunhalee.flo.layout.domain.Layout;
 import com.yunhalee.flo.layout.domain.LayoutRepository;
 import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
+import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
@@ -36,5 +37,23 @@ public class LayoutService {
                     .map(product -> ProductResponse.of(product))
                     .collect(Collectors.toList())
             ));
+    }
+
+    public LayoutResponse updateLayout(String id, LayoutRequest request) {
+        Layout layout = findById(id);
+        List<Product> products = request.getProducts().stream()
+            .map(productId -> productService.findById(productId))
+            .collect(Collectors.toList());
+        layout.update(request.getName(), products);
+        return LayoutResponse.of(layout,
+            ProductResponses.of(products.stream()
+                .map(product -> ProductResponse.of(product))
+                .collect(Collectors.toList())
+            ));
+    }
+
+    private Layout findById(String id) {
+        return layoutRepository.findById(id)
+            .orElseThrow(() -> new LayoutNotFoundException("Layout does not exist with id : " + id));
     }
 }

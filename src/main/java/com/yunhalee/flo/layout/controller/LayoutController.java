@@ -8,7 +8,9 @@ import com.yunhalee.flo.product.dto.ProductResponse;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,8 +25,13 @@ public class LayoutController {
     }
 
     @PostMapping
-    public ResponseEntity<LayoutResponse> createProduct(@RequestBody LayoutRequest request) {
+    public ResponseEntity<LayoutResponse> createLayout(@RequestBody LayoutRequest request) {
         LayoutResponse layout = layoutService.createLayout(request);
         return ResponseEntity.created(URI.create("/layouts/" + layout.getId())).body(layout);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LayoutResponse> updateLayout(@PathVariable("id") String id, @RequestBody LayoutRequest request) {
+        return ResponseEntity.ok(layoutService.updateLayout(id, request));
     }
 }

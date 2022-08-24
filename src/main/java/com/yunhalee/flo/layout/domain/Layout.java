@@ -1,5 +1,6 @@
 package com.yunhalee.flo.layout.domain;
 
+import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.product.domain.Product;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,10 +35,13 @@ public class Layout {
     }
 
     public void addProducts(List<Product> products) {
-        this.products.addProducts(products);
-        products.stream().forEach(product -> product.toLayout(this));
+        this.products.addProducts(products, this);
     }
 
+    public void update(String name, List<Product> products) {
+        this.name = name;
+        this.products.update(products, this);
+    }
 
     public String getId() {
         return id;
@@ -50,4 +54,6 @@ public class Layout {
     public List<Product> getProducts() {
         return products.getProducts();
     }
+
+
 }

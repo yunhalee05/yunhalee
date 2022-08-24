@@ -6,6 +6,7 @@ import static com.yunhalee.flo.product.domain.ProductTest.SECOND_PRODUCT;
 import static com.yunhalee.flo.product.domain.ProductTest.THIRD_PRODUCT;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.yunhalee.flo.ServiceTest;
@@ -109,6 +110,16 @@ class LayoutServiceTest extends ServiceTest {
         assertThat(layout.getId()).isEqualTo(response.getId());
         assertThat(layout.getName()).isEqualTo(response.getName());
         check_products_equals(Arrays.asList(SECOND_PRODUCT, THIRD_PRODUCT), response.getProducts());
+    }
+
+    @Test
+    public void delete_layout() {
+        // when
+        when(layoutRepository.findById(anyString())).thenReturn(Optional.of(layout));
+        layoutService.deleteLayout(ID);
+
+        // then
+        verify(layoutRepository).delete(any());
     }
 
     private void check_layout_equals(Layout layout, LayoutResponse response) {

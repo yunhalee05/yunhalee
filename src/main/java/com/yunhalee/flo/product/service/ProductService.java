@@ -6,7 +6,6 @@ import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
 import com.yunhalee.flo.product.exception.ProductNotFoundException;
-import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ProductService {
 
+    private static final String PRODUCT_NOT_FOUND_EXCEPTION = "Cannot find product with id : ";
     private ProductRepository productRepository;
 
     public ProductService(ProductRepository productRepository) {
@@ -34,9 +34,8 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponses findProducts() {
-        List<Product> products = productRepository.findAll();
-        return ProductResponses.of(products.stream()
-            .map(product -> ProductResponse.of(product))
+        return ProductResponses.of(productRepository.findAll().stream()
+            .map(ProductResponse::of)
             .collect(Collectors.toList()));
     }
 
@@ -53,7 +52,7 @@ public class ProductService {
 
     public Product findById(String id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new ProductNotFoundException("Cannot find product with id : " + id));
+            .orElseThrow(() -> new ProductNotFoundException(PRODUCT_NOT_FOUND_EXCEPTION + id));
     }
 
 

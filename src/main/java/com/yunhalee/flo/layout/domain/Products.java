@@ -37,12 +37,12 @@ public class Products {
 
     public void update(List<Product> products, Layout layout) {
         removeProducts(this.products.stream()
-        .filter(product -> !products.contains(product))
-        .collect(Collectors.toList()));
+            .filter(product -> !products.contains(product))
+            .collect(Collectors.toList()));
 
         addProducts(products.stream()
-        .filter(product -> !this.products.contains(product))
-        .collect(Collectors.toList()), layout);
+            .filter(product -> !this.products.contains(product))
+            .collect(Collectors.toList()), layout);
     }
 
     private void removeProducts(List<Product> products) {
@@ -50,5 +50,10 @@ public class Products {
             this.products.remove(product);
             product.toLayout(null);
         }
+    }
+
+    public void emptyProducts() {
+        this.products.forEach(product -> product.toLayout(null));
+        this.products.clear();
     }
 }

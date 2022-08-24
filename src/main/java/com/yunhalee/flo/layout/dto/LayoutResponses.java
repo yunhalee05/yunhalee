@@ -1,7 +1,5 @@
 package com.yunhalee.flo.layout.dto;
 
-import com.yunhalee.flo.product.dto.ProductResponse;
-import com.yunhalee.flo.product.dto.ProductResponses;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

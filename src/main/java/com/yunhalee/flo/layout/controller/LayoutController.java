@@ -4,12 +4,10 @@ import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
 import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.layout.service.LayoutService;
-import com.yunhalee.flo.product.dto.ProductRequest;
-import com.yunhalee.flo.product.dto.ProductResponse;
-import com.yunhalee.flo.product.dto.ProductResponses;
 import java.net.URI;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,4 +46,11 @@ public class LayoutController {
     public ResponseEntity<LayoutResponse> updateLayout(@PathVariable("id") String id, @RequestBody LayoutRequest request) {
         return ResponseEntity.ok(layoutService.updateLayout(id, request));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteLayout(@PathVariable("id") String id) {
+        layoutService.deleteLayout(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.yunhalee.flo.layout.domain;
 
-import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.product.domain.Product;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -41,6 +38,10 @@ public class Layout {
     public void update(String name, List<Product> products) {
         this.name = name;
         this.products.update(products, this);
+    }
+
+    public void emptyProducts() {
+        this.products.emptyProducts();
     }
 
     public String getId() {

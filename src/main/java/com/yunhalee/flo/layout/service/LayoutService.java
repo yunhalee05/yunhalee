@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LayoutService {
 
+    private static final String LAYOUT_NOT_FOUND_EXCEPTION = "Layout does not exist with id : ";
+
     private LayoutRepository layoutRepository;
     private ProductService productService;
 
@@ -28,53 +30,54 @@ public class LayoutService {
     }
 
     public LayoutResponse createLayout(LayoutRequest request) {
-        List<Product> products = request.getProducts().stream()
-            .map(id -> productService.findById(id))
-            .collect(Collectors.toList());
+        List<Product> products = products(request.getProducts());
         Layout layout = layoutRepository.save(request.toLayout());
         layout.addProducts(products);
-        return LayoutResponse.of(layout,
-            ProductResponses.of(products.stream()
-                .map(product -> ProductResponse.of(product))
-                .collect(Collectors.toList())
-            ));
+        return layoutResponse(layout);
+    }
+
+    @Transactional(readOnly = true)
+    public LayoutResponse findLayout(String id) {
+        Layout layout = findById(id);
+        return layoutResponse(layout);
+    }
+
+    @Transactional(readOnly = true)
+    public LayoutResponses findLayouts() {
+        return LayoutResponses.of(layoutRepository.findAll().stream()
+            .map(this::layoutResponse)
+            .collect(Collectors.toList()));
     }
 
     public LayoutResponse updateLayout(String id, LayoutRequest request) {
         Layout layout = findById(id);
-        List<Product> products = request.getProducts().stream()
-            .map(productId -> productService.findById(productId))
-            .collect(Collectors.toList());
-        layout.update(request.getName(), products);
-        return LayoutResponse.of(layout,
-            ProductResponses.of(products.stream()
-                .map(product -> ProductResponse.of(product))
-                .collect(Collectors.toList())
-            ));
+        layout.update(request.getName(), products(request.getProducts()));
+        return layoutResponse(layout);
     }
 
-    public LayoutResponse findLayout(String id) {
+    public void deleteLayout(String id) {
         Layout layout = findById(id);
-        return LayoutResponse.of(layout,
-            ProductResponses.of(layout.getProducts().stream()
-                .map(product -> ProductResponse.of(product))
-                .collect(Collectors.toList())
-            ));
+        layout.emptyProducts();
+        layoutRepository.delete(layout);
     }
 
-    public LayoutResponses findLayouts() {
-        return LayoutResponses.of(layoutRepository.findAll().stream()
-            .map(layout -> LayoutResponse.of(layout,
-                ProductResponses.of(layout.getProducts().stream()
-                    .map(product -> ProductResponse.of(product))
-                    .collect(Collectors.toList())
-                )))
-            .collect(Collectors.toList()));
-    }
 
     private Layout findById(String id) {
         return layoutRepository.findById(id)
-            .orElseThrow(
-                () -> new LayoutNotFoundException("Layout does not exist with id : " + id));
+            .orElseThrow(() -> new LayoutNotFoundException(LAYOUT_NOT_FOUND_EXCEPTION + id));
+    }
+
+    private LayoutResponse layoutResponse(Layout layout) {
+        return LayoutResponse.of(layout,
+            ProductResponses.of(layout.getProducts().stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList())
+            ));
+    }
+
+    private List<Product> products(List<String> products) {
+        return products.stream()
+            .map(productId -> productService.findById(productId))
+            .collect(Collectors.toList());
     }
 }

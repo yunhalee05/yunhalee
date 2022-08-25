@@ -5,6 +5,7 @@ import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import com.yunhalee.flo.product.dto.ProductResponse;
 import com.yunhalee.flo.product.dto.ProductResponses;
+import com.yunhalee.flo.product.exception.ProductNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -24,6 +26,7 @@ class ProductServiceTest extends ServiceTest {
     private static final String UPDATE_NAME = "updateTestProduct";
     private static final int PRICE = 30;
     private static final int UPDATE_PRICE = 20;
+    private static final String PRODUCT_NOT_FOUND_EXCEPTION = "Cannot find product with id : ";
 
     @InjectMocks
     private ProductService productService = new ProductService(productRepository);
@@ -62,6 +65,19 @@ class ProductServiceTest extends ServiceTest {
         // then
         check_equals(product, response);
     }
+
+
+    @Test
+    public void find_product_with_not_existing_id_is_invalid() {
+        // when
+        when(productRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // then
+        assertThatThrownBy(() -> productService.findProductById(ID))
+            .isInstanceOf(ProductNotFoundException.class)
+            .hasMessageContaining(PRODUCT_NOT_FOUND_EXCEPTION);
+    }
+
 
     @Test
     public void find_products() {

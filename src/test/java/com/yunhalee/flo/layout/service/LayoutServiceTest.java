@@ -19,7 +19,6 @@ import com.yunhalee.flo.layout.exception.LayoutNameAlreadyExistsException;
 import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
 import com.yunhalee.flo.product.dto.ProductResponse;
-import com.yunhalee.flo.product.dto.ProductResponses;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +41,7 @@ class LayoutServiceTest extends ServiceTest {
     private Layout layout;
 
     @InjectMocks
-    private LayoutService layoutService = new LayoutService(layoutRepository, productService);
+    private LayoutService layoutService = new LayoutService(layoutRepository, productRepository);
 
     @BeforeEach
     public void set_up() {
@@ -133,8 +132,7 @@ class LayoutServiceTest extends ServiceTest {
         layout.addProducts(Arrays.asList(FIRST_PRODUCT, SECOND_PRODUCT));
 
         // when
-        when(productService.findById(SECOND_PRODUCT.getId())).thenReturn(SECOND_PRODUCT);
-        when(productService.findById(THIRD_PRODUCT.getId())).thenReturn(THIRD_PRODUCT);
+        when(productRepository.findAllById(any())).thenReturn(Arrays.asList(SECOND_PRODUCT, THIRD_PRODUCT));
         when(layoutRepository.findById(anyString())).thenReturn(Optional.of(layout));
         LayoutResponse response = layoutService.updateLayout(ID, request);
 
@@ -176,10 +174,10 @@ class LayoutServiceTest extends ServiceTest {
         check_products_equals(layout.getProducts(), response.getProducts());
     }
 
-    private void check_products_equals(List<Product> products, ProductResponses responses) {
-        assertThat(products.size()).isEqualTo(responses.getProducts().size());
+    private void check_products_equals(List<Product> products, List<ProductResponse> responses) {
+        assertThat(products.size()).isEqualTo(responses.size());
         IntStream.range(0, products.size())
-            .forEach(index -> check_product_equals(products.get(index), responses.getProducts().get(index)));
+            .forEach(index -> check_product_equals(products.get(index), responses.get(index)));
     }
 
     private void check_product_equals(Product product, ProductResponse response) {

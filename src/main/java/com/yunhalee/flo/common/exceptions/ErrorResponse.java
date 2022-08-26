@@ -1,8 +1,10 @@
 package com.yunhalee.flo.common.exceptions;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ErrorResponse {
 
     private int status;
@@ -17,5 +19,12 @@ public class ErrorResponse {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+            "status=" + status +
+            ", message='" + message + '\'' +
+            ", timestamp=" + timestamp +
+            '}';
+    }
 }

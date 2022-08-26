@@ -27,7 +27,7 @@ public class Products {
     public void addProducts(List<Product> products, Layout layout) {
         products.forEach(product -> {
             this.addProduct(product);
-            product.toLayout(layout);
+            product.setLayout(layout);
         });
     }
 
@@ -48,12 +48,12 @@ public class Products {
     private void removeProducts(List<Product> products) {
         for (Product product : products) {
             this.products.remove(product);
-            product.toLayout(null);
+            product.setLayout(null);
         }
     }
 
     public void emptyProducts() {
-        this.products.forEach(product -> product.toLayout(null));
+        this.products.forEach(product -> product.setLayout(null));
         this.products.clear();
     }
 }

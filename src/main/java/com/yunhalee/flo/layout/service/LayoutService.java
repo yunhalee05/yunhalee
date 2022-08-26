@@ -7,8 +7,8 @@ import com.yunhalee.flo.layout.dto.LayoutResponse;
 import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.layout.exception.LayoutNotFoundException;
 import com.yunhalee.flo.product.domain.Product;
+import com.yunhalee.flo.product.domain.ProductRepository;
 import com.yunhalee.flo.product.dto.ProductResponse;
-import com.yunhalee.flo.product.dto.ProductResponses;
 import com.yunhalee.flo.layout.exception.LayoutNameAlreadyExistsException;
 import com.yunhalee.flo.product.service.ProductService;
 import java.util.List;
@@ -25,11 +25,13 @@ public class LayoutService {
 
 
     private LayoutRepository layoutRepository;
-    private ProductService productService;
+    private ProductRepository productRepository;
 
-    public LayoutService(LayoutRepository layoutRepository, ProductService productService) {
+
+
+    public LayoutService(LayoutRepository layoutRepository, ProductRepository productRepository) {
         this.layoutRepository = layoutRepository;
-        this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     public LayoutResponse createLayout(LayoutRequest request) {
@@ -59,7 +61,7 @@ public class LayoutService {
             .collect(Collectors.toList()));
     }
 
-    public LayoutResponse updateLayout(String id, LayoutRequest request) {
+    public synchronized LayoutResponse updateLayout(String id, LayoutRequest request) {
         Layout layout = findById(id);
         checkLayoutName(layout.getName(), request.getName());
         layout.update(request.getName(), products(request.getProducts()));
@@ -91,15 +93,13 @@ public class LayoutService {
 
     private LayoutResponse layoutResponse(Layout layout) {
         return LayoutResponse.of(layout,
-            ProductResponses.of(layout.getProducts().stream()
+            layout.getProducts().stream()
                 .map(ProductResponse::of)
                 .collect(Collectors.toList())
-            ));
+            );
     }
 
     private List<Product> products(List<String> products) {
-        return products.stream()
-            .map(productId -> productService.findById(productId))
-            .collect(Collectors.toList());
+        return productRepository.findAllById(products);
     }
 }

@@ -2,7 +2,8 @@ package com.yunhalee.flo.layout.controller;
 
 import static com.yunhalee.flo.layout.domain.LayoutTest.FIRST_LAYOUT;
 import static com.yunhalee.flo.layout.domain.LayoutTest.SECOND_LAYOUT;
-import static com.yunhalee.flo.product.controller.ProductControllerTest.PRODUCT_RESPONSES;
+import static com.yunhalee.flo.product.controller.ProductControllerTest.FIRST_PRODUCT_RESPONSE;
+import static com.yunhalee.flo.product.controller.ProductControllerTest.SECOND_PRODUCT_RESPONSE;
 import static com.yunhalee.flo.product.domain.ProductTest.FIRST_PRODUCT;
 import static com.yunhalee.flo.product.domain.ProductTest.SECOND_PRODUCT;
 import static com.yunhalee.flo.product.domain.ProductTest.THIRD_PRODUCT;
@@ -26,7 +27,6 @@ import com.yunhalee.flo.layout.dto.LayoutRequest;
 import com.yunhalee.flo.layout.dto.LayoutResponse;
 import com.yunhalee.flo.layout.dto.LayoutResponses;
 import com.yunhalee.flo.product.dto.ProductResponse;
-import com.yunhalee.flo.product.dto.ProductResponses;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.MediaTypes;
@@ -36,7 +36,7 @@ import org.springframework.restdocs.payload.ResponseFieldsSnippet;
 public class LayoutControllerTest extends ApiTest {
 
     private static final String LAYOUT_API = "/layouts";
-    private static final LayoutResponse LAYOUT_RESPONSE = LayoutResponse.of(FIRST_LAYOUT, PRODUCT_RESPONSES);
+    private static final LayoutResponse LAYOUT_RESPONSE = LayoutResponse.of(FIRST_LAYOUT, Arrays.asList(FIRST_PRODUCT_RESPONSE, SECOND_PRODUCT_RESPONSE));
     private static final LayoutRequest LAYOUT_REQUEST = new LayoutRequest(FIRST_LAYOUT.getName(),
         Arrays.asList(FIRST_PRODUCT.getId(), SECOND_PRODUCT.getId()));
 
@@ -69,8 +69,7 @@ public class LayoutControllerTest extends ApiTest {
 
     @Test
     void find_layouts() throws Exception {
-        ProductResponses secondProductResponses = ProductResponses.of(Arrays.asList(ProductResponse.of(THIRD_PRODUCT)));
-        LayoutResponse secondLayoutResponse = LayoutResponse.of(SECOND_LAYOUT, secondProductResponses);
+        LayoutResponse secondLayoutResponse = LayoutResponse.of(SECOND_LAYOUT, Arrays.asList(ProductResponse.of(THIRD_PRODUCT)));
         LayoutResponses layoutResponses = LayoutResponses.of(Arrays.asList(LAYOUT_RESPONSE, secondLayoutResponse));
         when(layoutService.findLayouts()).thenReturn(layoutResponses);
         this.mockMvc.perform(get(LAYOUT_API)
@@ -110,9 +109,9 @@ public class LayoutControllerTest extends ApiTest {
             fieldWithPath("id").description("layout id"),
             fieldWithPath("name").description("layout name"),
             fieldWithPath("products").description("layout products"),
-            fieldWithPath("products.products.[].id").description("product id"),
-            fieldWithPath("products.products.[].name").description("product name"),
-            fieldWithPath("products.products.[].price").description("product price"));
+            fieldWithPath("products.[].id").description("product id"),
+            fieldWithPath("products.[].name").description("product name"),
+            fieldWithPath("products.[].price").description("product price"));
     }
 
     public static ResponseFieldsSnippet layoutResponsesFields() {
@@ -121,8 +120,8 @@ public class LayoutControllerTest extends ApiTest {
             fieldWithPath("layouts.[].id").description("layout id"),
             fieldWithPath("layouts.[].name").description("layout name"),
             fieldWithPath("layouts.[].products").description("layout products"),
-            fieldWithPath("layouts.[].products.products.[].id").description("product id"),
-            fieldWithPath("layouts.[].products.products.[].name").description("product name"),
-            fieldWithPath("layouts.[].products.products.[].price").description("product price"));
+            fieldWithPath("layouts.[].products.[].id").description("product id"),
+            fieldWithPath("layouts.[].products.[].name").description("product name"),
+            fieldWithPath("layouts.[].products.[].price").description("product price"));
     }
 }

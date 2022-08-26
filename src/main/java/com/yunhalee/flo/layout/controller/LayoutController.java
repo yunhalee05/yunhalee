@@ -48,7 +48,7 @@ public class LayoutController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteLayout(@PathVariable("id") String id) {
+    public ResponseEntity<Void> deleteLayout(@PathVariable("id") String id) {
         layoutService.deleteLayout(id);
         return ResponseEntity.noContent().build();
     }

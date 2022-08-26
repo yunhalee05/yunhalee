@@ -1,21 +1,23 @@
 package com.yunhalee.flo.product.domain;
 
 import com.yunhalee.flo.layout.domain.Layout;
-import com.yunhalee.flo.layout.domain.Products;
 import com.yunhalee.flo.product.dto.ProductRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @NoArgsConstructor
+@Table(indexes = @Index(name = "idx_name", columnList = "name"))
 public class Product {
 
     @Id
@@ -57,7 +59,7 @@ public class Product {
         return price;
     }
 
-    public void toLayout(Layout layout) {
+    public void setLayout(Layout layout) {
         this.layout = layout;
     }
 }

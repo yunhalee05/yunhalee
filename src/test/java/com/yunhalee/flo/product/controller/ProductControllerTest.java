@@ -31,9 +31,9 @@ public class ProductControllerTest extends ApiTest {
 
     private static final String PRODUCT_API = "/products";
     private static final ProductRequest PRODUCT_REQUEST = new ProductRequest(FIRST_PRODUCT.getName(), FIRST_PRODUCT.getPrice());
-    private static final ProductResponse FIRST_PRODUCT_RESPONSE = ProductResponse.of(FIRST_PRODUCT);
-    private static final ProductResponse SECOND_PRODUCT_RESPONSE = ProductResponse.of(SECOND_PRODUCT);
-    public static final ProductResponses PRODUCT_RESPONSES = ProductResponses.of(Arrays.asList(FIRST_PRODUCT_RESPONSE, SECOND_PRODUCT_RESPONSE));
+    public static final ProductResponse FIRST_PRODUCT_RESPONSE = ProductResponse.of(FIRST_PRODUCT);
+    public static final ProductResponse SECOND_PRODUCT_RESPONSE = ProductResponse.of(SECOND_PRODUCT);
+    private static final ProductResponses PRODUCT_RESPONSES = ProductResponses.of(Arrays.asList(FIRST_PRODUCT_RESPONSE, SECOND_PRODUCT_RESPONSE));
 
     @Test
     void create_product() throws Exception {

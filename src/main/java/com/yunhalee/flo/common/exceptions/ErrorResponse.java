@@ -1,5 +1,6 @@
 package com.yunhalee.flo.common.exceptions;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,14 +10,12 @@ public class ErrorResponse {
 
     private int status;
     private String message;
-    private long timestamp;
-
-    public ErrorResponse() {
-    }
+    private LocalDateTime timestamp;
 
     public ErrorResponse(int status, String message) {
         this.message = message;
         this.status = status;
+        this.timestamp = LocalDateTime.now();
     }
 
     @Override

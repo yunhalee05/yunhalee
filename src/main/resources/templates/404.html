@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default_layout}">
+
+<th:block layout:fragment="head">
+  <title>Spring Boot Error PAGE</title>
+</th:block>
+
+<body>
+<h1>This is Not Found Page!</h1>
+<div>
+  Not Found Error has occurred.<br><br>
+  CODE: <span th:text="${response.getStatus()}"></span><br>
+  MESSAGE: <span th:text="${response.getMessage()}"></span><br>
+  TIMESTAMP: <span th:text="${response.getTimestamp()}"></span><br>
+</div>
+</body>
+
+</html>

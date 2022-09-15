@@ -96,6 +96,7 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -152,8 +153,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-
-		<defaultGoal>install</defaultGoal>
 	</build>
 
 </project>

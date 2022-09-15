@@ -2,6 +2,7 @@ package com.yunhalee.flo.common.exceptions;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@Slf4j
 public class GlobalErrorController implements ErrorController {
 
     private static final String NOT_FOUND_PAGE = "404";
@@ -27,6 +29,7 @@ public class GlobalErrorController implements ErrorController {
         else  if (httpStatus == HttpStatus.INTERNAL_SERVER_ERROR) {
             return INTERNAL_SERVER_ERROR_PAGE;
         }
+        log.info(ERROR_PAGE);
         return ERROR_PAGE;
     }
 }
